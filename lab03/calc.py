@@ -9,6 +9,3 @@ def minus(x, y):
 
 def multiply(x, y):
     print(x * y)
-
-def divide(x, y):
-    print(x / y)
