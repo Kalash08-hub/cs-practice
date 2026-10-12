@@ -17,7 +17,7 @@ def parse_record(line: str):
         raise ValueError("Дата не может быть пустой")
 
     try:
-        temp = float(temp)
+        temp = float(temp.replace(",", "."))
     except ValueError:
         raise ValueError("Температура должна быть числом")
 
