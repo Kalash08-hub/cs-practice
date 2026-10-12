@@ -1,11 +1,37 @@
-def parse_record(line: str) -> dict:
+def parse_record(line: str):
+    fields = line.split(";")
+
+    if len(fields) != 3:
+        raise ValueError("В записи должно быть ровно три поля")
+
+    city, temp, date = fields
+
+    city = city.strip()
+    temp = temp.strip()
+    date = date.strip()
+
+    if not city:
+        raise ValueError("Название города не может быть пустым")
+
+    if not date:
+        raise ValueError("Дата не может быть пустой")
+
+    try:
+        temp = float(temp)
+    except ValueError:
+        raise ValueError("Температура должна быть числом")
+
+    return {
+        "city": city,
+        "temp": temp,
+        "date": date
+    }
+
+def read_valid(lines: list[str]):
     pass
 
-def read_valid(lines: list[str]) -> list[dict]:
+def average_by_city(records: list[dict]):
     pass
 
-def average_by_city(records: list[dict]) -> dict:
-    pass
-
-def warmest_city(records: list[dict]) -> str:
+def warmest_city(records: list[dict]):
     pass
