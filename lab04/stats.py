@@ -28,7 +28,7 @@ def parse_record(line: str):
     }
 
 
-def read_valid(lines: list[str]) -> list[dict]:
+def read_valid(lines: list[str]):
     records = []
 
     for line in lines:
@@ -45,7 +45,7 @@ def read_valid(lines: list[str]) -> list[dict]:
     return records
 
 
-def average_by_city(records: list[dict]) -> dict:
+def average_by_city(records: list[dict]):
     total = {}
     count = {}
 
@@ -63,5 +63,11 @@ def average_by_city(records: list[dict]) -> dict:
 
     return averages
 
+
 def warmest_city(records: list[dict]):
-    pass
+    averages = average_by_city(records)
+
+    if not averages:
+        return ""
+
+    return sorted(averages, key=lambda city: (-averages[city], city))[0]
