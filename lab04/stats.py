@@ -23,7 +23,7 @@ def parse_record(line: str):
 
     return {
         "city": city,
-        "temp": temp,
+        "temperature": temp,
         "date": date
     }
 
@@ -45,13 +45,14 @@ def read_valid(lines: list[str]):
     return records
 
 
+
 def average_by_city(records: list[dict]):
     total = {}
     count = {}
 
     for record in records:
         city = record["city"]
-        temp = record["temp"]
+        temp = record["temperature"]
 
         total[city] = total.get(city, 0) + temp
         count[city] = count.get(city, 0) + 1
