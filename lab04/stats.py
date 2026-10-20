@@ -44,8 +44,6 @@ def read_valid(lines: list[str]):
 
     return records
 
-
-
 def average_by_city(records: list[dict]):
     total = {}
     count = {}

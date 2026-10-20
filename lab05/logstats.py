@@ -1,53 +1,44 @@
+from datetime import datetime
+
 def parse_event(line):
     fields = line.split()
 
+    if len(line) < 3:
+        raise ValueError("Негодная строка")
+
     time = fields[0]
     level = fields[1]
-    message = fields[2:]
+    message = " ".join(fields[2:])
 
-    if level not in ["DEBUG", "INFO", "WARNING", "ERROR"] or len(time) != 19 or not message:
-        raise ValueError ("негодная строка")
+    if level not in ["DEBUG", "INFO", "WARNING", "ERROR"]:
+        raise ValueError("негодная строка")
+
+    try:
+        datetime.strptime(time, "%Y-%m-%dT%H:%M:%S")
+    except ValueError:
+        raise ValueError("Негодная строка")
 
     return {
         "time": time,
         "level": level,
-        "message": " ".join(message)
+        "message": message
     }
 
 def count_levels(lines):
+    res = {}
 
-    lines = lines.readlines()
+    for line in lines:
+        try:
+            event = parse_event(line)
+        except ValueError:
+            continue
 
-    broken_count = 0
-    debug_count = 0
-    error_count = 0
-    info_count = 0
-    warning_count = 0
+        res[event["level"]] = res.get(event["level"], 0) + 1
 
-    if len(lines) != 0:
-        for line in lines:
-            if parse_event(line)["level"] == "DEBUG":
-                debug_count += 1
-            elif parse_event(line)["level"] == "ERROR":
-                error_count += 1
-            elif parse_event(line)["level"] == "INFO":
-                info_count += 1
-            elif parse_event(line)["level"] == "WARNING":
-                warning_count += 1
-            else:
-                broken_count += 1
+    return res
 
-    return{
-        "BROKEN": broken_count,
-        "DEBUG": debug_count,
-        "ERROR": error_count,
-        "INFO": info_count,
-        "WARNING": warning_count,
-    }
 
 def top_errors(lines, n):
-
-    lines = lines.readlines()
 
     count = {}
 
@@ -63,10 +54,23 @@ def top_errors(lines, n):
 
     sorted_errors = sorted(
         count.items(),
-        key=lambda x: x[1],
-        reverse=True
+        key=lambda x: (-x[1], x[0]),
     )
 
     top_errors = sorted_errors[:n]
 
     return dict(top_errors)
+
+def format_report(counts, errors):
+    report = "Отчёт по журналу\n\n"
+
+    for level in sorted(counts):
+        report += f"{level}: {counts[level]}\n"
+
+    report += "\nЧастые ошибки:\n"
+
+    for message, amount in errors.items():
+        report += f"- {message} — {amount}\n"
+
+    return report
+
