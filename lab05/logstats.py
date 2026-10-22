@@ -9,6 +9,7 @@ def parse_event(line):
     time = fields[0]
     level = fields[1]
     message = " ".join(fields[2:])
+
     try:
         level  in ["DEBUG", "INFO", "WARNING", "ERROR"]
     except ValueError:
@@ -29,6 +30,10 @@ def count_levels(lines):
     res = {}
 
     for line in lines:
+
+        if not line.strip():
+            continue
+
         try:
             event = parse_event(line)
             Level = event.get("level", "BROKEN")
@@ -66,6 +71,7 @@ def top_errors(lines, n):
 
 
 def format_report(counts, errors):
+
     report = "Отчёт по журналу\n\n"
 
     for level in sorted(counts):
