@@ -42,7 +42,7 @@ def count_levels(lines):
     return res
 
 
-def top_errors(lines):
+def top_errors(lines, n):
 
     count = {}
 
@@ -62,7 +62,7 @@ def top_errors(lines):
         key=lambda x: x[1], reverse=True
     )
 
-    return sorted_errors
+    return sorted_errors[:n]
 
 
 def format_report(counts, errors):
