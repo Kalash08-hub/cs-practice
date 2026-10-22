@@ -1,9 +1,9 @@
-from logstats import parse_event, count_levels, format_report
+from logstats import top_errors, count_levels, format_report
 
 with open("events.log", "r", encoding="utf-8") as file:
-    for line in file.readlines():
-        res_1 = parse_event(line)
 
-    res_2 = count_levels(file)
+    res_1 = count_levels(file)
+    file.seek(0)
+    res_2 = top_errors(file)
 
 print(format_report(res_1, res_2))

@@ -14,10 +14,10 @@ def parse_event(line):
     except ValueError:
         raise ValueError("негодная строка")
 
-    """try:
+    try:
         datetime.strptime(time, "%Y-%m-%dT%H:%M:%S")
     except ValueError:
-        raise ValueError("Негодная строка")"""
+        raise ValueError("Негодная строка")
 
     return {
         "time": time,
@@ -31,36 +31,39 @@ def count_levels(lines):
     for line in lines:
         try:
             event = parse_event(line)
+            Level = event.get("level", "BROKEN")
+            if Level == "строка" or Level == "TRACE":
+                Level = "BROKEN"
+
         except ValueError:
-            continue
+            Level = "BROKEN"
 
-        res[event["level"]] = res.get(event["level"], 0) + 1 if event["Level"] else res.get("ERROR", 0) + 1
-
+        res[Level] = res.get(Level, 0) + 1
     return res
 
 
-def top_errors(lines, n):
+def top_errors(lines):
 
     count = {}
 
     for line in lines:
         try:
             event = parse_event(line)
+
         except ValueError:
             continue
 
         if event["level"] == "ERROR":
-            message = event["message"]
-            count[message] = count.get(message, 0) + 1
+                message = event["message"]
+                count[message] = count.get(message, 0) + 1
 
     sorted_errors = sorted(
         count.items(),
-        key=lambda x: (-x[1], x[0]),
+        key=lambda x: x[1], reverse=True
     )
 
-    top_errors = sorted_errors[:n]
+    return sorted_errors
 
-    return top_errors
 
 def format_report(counts, errors):
     report = "Отчёт по журналу\n\n"
@@ -70,7 +73,7 @@ def format_report(counts, errors):
 
     report += "\nЧастые ошибки:\n"
 
-    for message, amount in errors.items():
-        report += f"- {message} — {amount}\n"
+    for message, count in errors:
+        report += f"- {message} — {count}\n"
 
     return report
