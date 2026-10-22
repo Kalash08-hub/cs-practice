@@ -9,14 +9,15 @@ def parse_event(line):
     time = fields[0]
     level = fields[1]
     message = " ".join(fields[2:])
-
-    if level not in ["DEBUG", "INFO", "WARNING", "ERROR"]:
+    try:
+        level  in ["DEBUG", "INFO", "WARNING", "ERROR"]
+    except ValueError:
         raise ValueError("негодная строка")
 
-    try:
+    """try:
         datetime.strptime(time, "%Y-%m-%dT%H:%M:%S")
     except ValueError:
-        raise ValueError("Негодная строка")
+        raise ValueError("Негодная строка")"""
 
     return {
         "time": time,
@@ -59,7 +60,7 @@ def top_errors(lines, n):
 
     top_errors = sorted_errors[:n]
 
-    return dict(top_errors)
+    return top_errors
 
 def format_report(counts, errors):
     report = "Отчёт по журналу\n\n"
@@ -73,4 +74,3 @@ def format_report(counts, errors):
         report += f"- {message} — {amount}\n"
 
     return report
-
