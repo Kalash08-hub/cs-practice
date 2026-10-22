@@ -32,7 +32,7 @@ def count_levels(lines):
         try:
             event = parse_event(line)
         except ValueError:
-            continue
+            res["level"] = res.get("BROKEN", 0) + 1
 
         res[event["level"]] = res.get(event["level"], 0) + 1
 
