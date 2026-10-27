@@ -1,30 +1,18 @@
-from pathlib import Path
-import os
-
-def count_by_extension(paths):
-
-    count_extension = {}
-
+def count_by_extension(paths: list[str]) -> dict[str, int]:
+    counts = {}
     for path in paths:
-        extension = Path(path.file_name).suffix.lower()
+        extension = path.rsplit("/", 1)[-1].rpartition(".")[2].lower() if "." in path.rsplit("/", 1)[-1] else ""
+        counts[extension] = counts.get(extension, 0) + 1
+    return counts
 
-        count_extension[extension] = count_extension.get(extension, 0) + 1
 
-    return count_extension
+def deepest_path(paths: list[str]) -> str:
+    return min(paths, key=lambda path: (-path.count("/"), path), default="")
 
-def deepest_path(paths):
 
-    count_deepest = {}
-
-    for path in paths:
-        name = Path(path.file_name)
-        count_deepest[name] = count_deepest.get(name, 0) + 1
-
-    return count_deepest
-
-def human_size(n_bytes):
-    if n_bytes < 1024:
-        return f"{n_bytes:.2f} Б"
-    elif 1024 <= n_bytes < 2**20:
-        n_bytes = n_bytes // 1024
-        return f"{n_bytes:.2f} КБ"
+def human_size(n_bytes: int) -> str:
+    size = n_bytes
+    for unit in ["Б", "КБ", "МБ", "ГБ", "ТБ"]:
+        if size < 1024 or unit == "ТБ":
+            return f"{size:.0f} Б" if unit == "Б" else f"{size:.1f} {unit}"
+        size /= 1024
