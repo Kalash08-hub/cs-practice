@@ -37,7 +37,7 @@ def human_size(n_bytes: int) -> str:
     unit_index = 0
 
     while size >= 1024 and unit_index < len(units) - 1:
-        size = size / 1024
+        size = 1024
         unit_index += 1
 
     if unit_index == 0:
