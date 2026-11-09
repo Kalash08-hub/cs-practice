@@ -61,7 +61,7 @@ def convert_value(value: str):
         pass
 
     try:
-        return float(value)
+        return float(value.replace(",", "."))
     except ValueError:
         pass
 
