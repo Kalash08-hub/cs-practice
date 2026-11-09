@@ -6,14 +6,14 @@ def csv_to_records(text: str) -> list[dict]:
     if not lines:
         return []
 
-    headers = lines[0].split(",")
+    headers = [header.strip() for header in lines[0].split(",")]
     records = []
 
     for line in lines[1:]:
         if not line.strip():
             continue
 
-        values = line.split(",")
+        values = [value.strip() for value in line.split(",")]
         records.append(dict(zip(headers, values)))
 
     return records
